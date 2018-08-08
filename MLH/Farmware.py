@@ -102,7 +102,7 @@ class Farmware(object):
             encoded_payload += '=' * (4 - len(encoded_payload) % 4)
             token = json.loads(base64.b64decode(encoded_payload).decode('utf-8'))
             self.bot_id=token['bot']
-            self.api_url = 'https:'+token['iss']+'/api/'
+            self.api_url = 'http:'+token['iss']+'/api/'
             # self.api_url='https://my.farmbot.io/api/'
             self.mqtt_url = token['mqtt']
         except :
