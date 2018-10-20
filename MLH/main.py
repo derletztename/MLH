@@ -26,13 +26,13 @@ class MLH(Farmware):
 
         super(MLH,self).load_config()
         self.get_arg('action'       , "test", str)
-        self.get_arg('pointname'    , 'Pepper', str)
-        self.get_arg('default_z'    , -380, int)
+        self.get_arg('pointname'    , '*', str)
+        self.get_arg('default_z'    , 0, int)
         self.get_arg('filter_meta'  , None, list)
         self.get_arg('save_meta'    , None,list)
         self.get_arg('init'         , None, str)
         self.get_arg('before'       , None, str)
-        self.get_arg('after'        , None, str)
+        self.get_arg('after'        , 'Water [MLH]', str)
         self.get_arg('end'          , None, str)
 
         self.args['pointname']=self.args['pointname'].lower().split(',')
@@ -388,6 +388,7 @@ if __name__ == "__main__":
     app = MLH()
     try:
         app.load_config()
+        app.log(app.farmware_url)
         app.run()
         sys.exit(0)
 
@@ -395,4 +396,4 @@ if __name__ == "__main__":
         app.log('HTTP error {} {} '.format(error.response.status_code,error.response.text[0:100]), 'error')
     except Exception as e:
         app.log('Something went wrong: {}'.format(str(e)), 'error')
-    sys.exit(1)
+sys.exit(1)
