@@ -301,5 +301,4 @@ class Farmware(object):
     def distance(self, p1, p2):
         dx=math.fabs(p1['x']-p2['x'])
         dy = math.fabs(p1['y'] - p2['y'])
-        return math.hypot(dx,dy)
-
+return math.hypot(dx,dy)
