@@ -169,21 +169,19 @@ class Farmware(object):
         if not self.debug:
             time.sleep(10)
 
-        sync = ""
         for i in range(1,2):
             self.log("...actually syncing...")
             node = {'kind': 'sync', 'args': {}}
             response = requests.post(self.farmware_url + 'api/v1/celery_script', data=json.dumps(node),headers=self.headers)
             response.raise_for_status()
 
-            cnt = 0
             for cnt in range(1,30):
                 sync=self.state()['informational_settings']['sync_status']
                 self.log("interim status {}".format(sync))
-                if sync== "synced" or sync == "sync_error": break
+                if sync== "synced" or sync == "sync failed": break
                 time.sleep(1)
             if cnt>=30: raise ValueError('Sync error, bot failed to complete syncing')
-            if sync != "sync_error": break
+            if sync != "sync failed": break
 
         self.log('Sync status {}'.format(self.state()['informational_settings']['sync_status']))
 
