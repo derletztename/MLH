@@ -102,7 +102,7 @@ class Farmware(object):
             encoded_payload += '=' * (4 - len(encoded_payload) % 4)
             token = json.loads(base64.b64decode(encoded_payload).decode('utf-8'))
             self.bot_id=token['bot']
-            self.api_url = 'http:'+token['iss']+'/api/'
+            self.api_url = 'https:'+token['iss']+'/api/'
             # self.api_url='https://my.farmbot.io/api/'
             self.mqtt_url = token['mqtt']
         except :
@@ -169,19 +169,21 @@ class Farmware(object):
         if not self.debug:
             time.sleep(10)
 
+        sync = ""
         for i in range(1,2):
             self.log("...actually syncing...")
             node = {'kind': 'sync', 'args': {}}
             response = requests.post(self.farmware_url + 'api/v1/celery_script', data=json.dumps(node),headers=self.headers)
             response.raise_for_status()
 
+            cnt = 0
             for cnt in range(1,30):
                 sync=self.state()['informational_settings']['sync_status']
                 self.log("interim status {}".format(sync))
-                if sync== "synced" or sync == "sync failed": break
+                if sync== "synced" or sync == "sync_error": break
                 time.sleep(1)
             if cnt>=30: raise ValueError('Sync error, bot failed to complete syncing')
-            if sync != "sync failed": break
+            if sync != "sync_error": break
 
         self.log('Sync status {}'.format(self.state()['informational_settings']['sync_status']))
 
@@ -299,4 +301,5 @@ class Farmware(object):
     def distance(self, p1, p2):
         dx=math.fabs(p1['x']-p2['x'])
         dy = math.fabs(p1['y'] - p2['y'])
-return math.hypot(dx,dy)
+        return math.hypot(dx,dy)
+
